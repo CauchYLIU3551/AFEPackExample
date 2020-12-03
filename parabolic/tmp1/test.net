@@ -1,23 +1,23 @@
 //
-// time: Thu Nov  5 17:50:19 2020
+// time: Thu Dec  3 19:48:16 2020
 //
 // version: 3.2.0 (format), 4.4.4 (DX)
 //
 //
 // MODULE main
-// workspace: width = 500, height = 537
+// workspace: width = 352, height = 437
 // layout: snap = 0, width = 50, height = 50, align = NN
 //
 macro main(
 ) -> (
 ) {
     // 
-    // node FileSelector[1]: x = 127, y = 63, inputs = 0, label = FileSelector
-    // output[1]: visible = 2, type = 32, value = "u_h.dx"
-    // output[2]: visible = 2, type = 32, value = "u_h.dx"
+    // node FileSelector[1]: x = 224, y = 48, inputs = 0, label = FileSelector
+    // output[1]: visible = 1, type = 32, value = "/home/cyliu/AFEPackExample/parabolic/tmp1/u_h.dx"
+    // output[2]: visible = 1, type = 32, value = "u_h.dx"
     //
     // 
-    // node Import[1]: x = 167, y = 167, inputs = 6, label = Import
+    // node Import[1]: x = 234, y = 156, inputs = 6, label = Import
     //
 main_Import_1_out_1 = 
     Import(
@@ -29,57 +29,19 @@ main_Import_1_out_1 =
     main_Import_1_in_6
     ) [instance: 1, cache: 1];
     // 
-    // node RubberSheet[1]: x = 199, y = 270, inputs = 4, label = RubberSheet
-    // input[2]: defaulting = 0, visible = 1, type = 5, value = 1.0
+    // node ShowConnections[1]: x = 241, y = 263, inputs = 1, label = ShowConnections
     //
-main_RubberSheet_1_out_1 = 
-    RubberSheet(
-    main_Import_1_out_1,
-    main_RubberSheet_1_in_2,
-    main_RubberSheet_1_in_3,
-    main_RubberSheet_1_in_4
+main_ShowConnections_1_out_1 = 
+    ShowConnections(
+    main_Import_1_out_1
     ) [instance: 1, cache: 1];
     // 
-    // node AutoColor[1]: x = 266, y = 372, inputs = 10, label = AutoColor
-    //
-main_AutoColor_1_out_1,
-main_AutoColor_1_out_2 = 
-    AutoColor(
-    main_RubberSheet_1_out_1,
-    main_AutoColor_1_in_2,
-    main_AutoColor_1_in_3,
-    main_AutoColor_1_in_4,
-    main_AutoColor_1_in_5,
-    main_AutoColor_1_in_6,
-    main_AutoColor_1_in_7,
-    main_AutoColor_1_in_8,
-    main_AutoColor_1_in_9,
-    main_AutoColor_1_in_10
-    ) [instance: 1, cache: 1];
-    // 
-    // node Image[1]: x = 306, y = 475, inputs = 49, label = Image
+    // node Image[1]: x = 237, y = 378, inputs = 49, label = Image
     // input[1]: defaulting = 0, visible = 0, type = 67108863, value = "Image_1"
-    // input[4]: defaulting = 0, visible = 0, type = 1, value = 1
-    // input[5]: defaulting = 0, visible = 0, type = 8, value = [0.5 0.5 -0.000496417]
-    // input[6]: defaulting = 0, visible = 0, type = 8, value = [5.79224 -1.69161 2.23542]
-    // input[7]: defaulting = 0, visible = 0, type = 5, value = 3.29526
-    // input[8]: defaulting = 0, visible = 0, type = 1, value = 1212
-    // input[9]: defaulting = 0, visible = 0, type = 5, value = 0.572
-    // input[10]: defaulting = 0, visible = 0, type = 8, value = [-0.336055 0.138883 0.931546]
-    // input[11]: defaulting = 1, visible = 0, type = 5, value = 30.0002
-    // input[12]: defaulting = 0, visible = 0, type = 1, value = 0
+    // input[4]: defaulting = 0, visible = 0, type = 1, value = 0
     // input[14]: defaulting = 0, visible = 0, type = 1, value = 1
-    // input[15]: defaulting = 1, visible = 0, type = 32, value = "none"
-    // input[16]: defaulting = 1, visible = 0, type = 32, value = "none"
-    // input[17]: defaulting = 1, visible = 0, type = 1, value = 1
-    // input[18]: defaulting = 1, visible = 0, type = 1, value = 1
-    // input[19]: defaulting = 0, visible = 0, type = 1, value = 0
-    // input[29]: defaulting = 0, visible = 0, type = 3, value = 1
-    // input[33]: defaulting = 0, visible = 0, type = 3, value = 1
-    // input[39]: defaulting = 0, visible = 0, type = 5, value = 0.5
-    // input[41]: defaulting = 0, visible = 0, type = 32, value = "none"
+    // input[19]: defaulting = 0, visible = 0, type = 3, value = 0
     // depth: value = 24
-    // window: position = (0.0297,0.0176), size = 0.6385x0.6796
     // internal caching: 1
     //
 main_Image_1_out_1,
@@ -87,7 +49,7 @@ main_Image_1_out_2,
 main_Image_1_out_3 = 
     Image(
     main_Image_1_in_1,
-    main_AutoColor_1_out_1,
+    main_ShowConnections_1_out_1,
     main_Image_1_in_3,
     main_Image_1_in_4,
     main_Image_1_in_5,
@@ -139,27 +101,14 @@ main_Image_1_out_3 =
 // network: end of macro body
 CacheScene(main_Image_1_in_1, main_Image_1_out_1, main_Image_1_out_2);
 }
-main_FileSelector_1_out_1 = "u_h.dx";
+main_FileSelector_1_out_1 = "/home/cyliu/AFEPackExample/parabolic/tmp1/u_h.dx";
 main_Import_1_in_2 = NULL;
 main_Import_1_in_3 = NULL;
 main_Import_1_in_4 = NULL;
 main_Import_1_in_5 = NULL;
 main_Import_1_in_6 = NULL;
 main_Import_1_out_1 = NULL;
-main_RubberSheet_1_in_2 = 1.0;
-main_RubberSheet_1_in_3 = NULL;
-main_RubberSheet_1_in_4 = NULL;
-main_RubberSheet_1_out_1 = NULL;
-main_AutoColor_1_in_2 = NULL;
-main_AutoColor_1_in_3 = NULL;
-main_AutoColor_1_in_4 = NULL;
-main_AutoColor_1_in_5 = NULL;
-main_AutoColor_1_in_6 = NULL;
-main_AutoColor_1_in_7 = NULL;
-main_AutoColor_1_in_8 = NULL;
-main_AutoColor_1_in_9 = NULL;
-main_AutoColor_1_in_10 = NULL;
-main_AutoColor_1_out_1 = NULL;
+main_ShowConnections_1_out_1 = NULL;
 macro Image(
         id,
         object,
@@ -474,15 +423,15 @@ macro Image(
 }
 main_Image_1_in_1 = "Image_1";
 main_Image_1_in_3 = "X24,,";
-main_Image_1_in_4 = 1;
-main_Image_1_in_5 = [0.5 0.5 -0.000496417];
-main_Image_1_in_6 = [5.79224 -1.69161 2.23542];
-main_Image_1_in_7 = 3.29526;
-main_Image_1_in_8 = 1212;
-main_Image_1_in_9 = 0.572;
-main_Image_1_in_10 = [-0.336055 0.138883 0.931546];
+main_Image_1_in_4 = 0;
+main_Image_1_in_5 = NULL;
+main_Image_1_in_6 = NULL;
+main_Image_1_in_7 = NULL;
+main_Image_1_in_8 = NULL;
+main_Image_1_in_9 = NULL;
+main_Image_1_in_10 = NULL;
 main_Image_1_in_11 = NULL;
-main_Image_1_in_12 = 0;
+main_Image_1_in_12 = NULL;
 main_Image_1_in_13 = NULL;
 main_Image_1_in_14 = 1;
 main_Image_1_in_15 = NULL;
@@ -498,19 +447,19 @@ main_Image_1_in_25 = NULL;
 main_Image_1_in_26 = NULL;
 main_Image_1_in_27 = NULL;
 main_Image_1_in_28 = NULL;
-main_Image_1_in_29 = 1;
+main_Image_1_in_29 = NULL;
 main_Image_1_in_30 = NULL;
 main_Image_1_in_31 = NULL;
 main_Image_1_in_32 = NULL;
-main_Image_1_in_33 = 1;
+main_Image_1_in_33 = NULL;
 main_Image_1_in_34 = NULL;
 main_Image_1_in_35 = NULL;
 main_Image_1_in_36 = NULL;
 main_Image_1_in_37 = NULL;
 main_Image_1_in_38 = NULL;
-main_Image_1_in_39 = 0.5;
+main_Image_1_in_39 = NULL;
 main_Image_1_in_40 = NULL;
-main_Image_1_in_41 = "none";
+main_Image_1_in_41 = NULL;
 main_Image_1_in_42 = NULL;
 main_Image_1_in_43 = NULL;
 main_Image_1_in_44 = NULL;

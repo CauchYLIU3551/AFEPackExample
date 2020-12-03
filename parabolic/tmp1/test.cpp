@@ -173,7 +173,7 @@ int main(int argc, char * argv[])
     t += dt; /// 更新时间
     
     std::cout << "\n\tt = " <<  t << std::endl;
-  } while (1);
+  } while (t<0.2);
  
   return 0;
 }
