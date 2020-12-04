@@ -169,6 +169,8 @@ int main(int argc, char * argv[])
 
     /// 输出数据画图
     u_h.writeOpenDXData("u_h.dx");
+    std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
+    getchar();
 
     t += dt; /// 更新时间
     
