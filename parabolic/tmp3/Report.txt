@@ -1,0 +1,5 @@
+There might be some problems:
+
+1. The result fails converge to the true solution after time steps(almost 50 dt time steps);
+
+2. The programme can only save the result of the last time step. Maybe there are some skills to save the images during the whole progress;
