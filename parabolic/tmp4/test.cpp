@@ -100,8 +100,8 @@ public:
 	  elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]/_dt +
                                      innerProduct(bas_grad[i][l], bas_grad[j][l])+
 				     bas_grad[i][l][0]*bas_val[j][l]+bas_grad[i][l][1]*bas_val[j][l]);
-       /* elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]/_dt +
-                                     innerProduct(bas_grad[i][l], bas_grad[j][l]);*/
+          /*elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]/_dt +
+                                     innerProduct(bas_grad[i][l], bas_grad[j][l]));*/
 	  // If the equation changes, I can edit this elementmatrix to get the 
 	  // new programme to solve the diff equations.
 	  //Here is the: \phi_il * \phi_jl /dt (The form in element FEMspace of 
@@ -232,13 +232,15 @@ int main(int argc, char * argv[])
 
     //This is the original method to solve the result;
     //u_h.writeOpenDXData("u_h.dx");
-    std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
-    getchar();
+
+    // This is the command to stop the compute unless user Press ENTER or CTRL+C otherwise it will stop here; 
+    //std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
+    //getchar();
 
     t += dt; /// 更新时间
     
     std::cout << "\n\tt = " <<  t << std::endl;
-  } while (t);
+  } while (t<5);
  
   return 0;
 }
