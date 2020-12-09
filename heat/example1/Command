@@ -1,0 +1,4 @@
+#!/bin/bash
+
+g++ -c -o test.o test.cpp -I/usr/local/dealii-8.1.0/base/include -I/usr/local/dealii-8.1.0/lac/include -I/usr/local/dealii-8.1.0/include -I/usr/local/dealii-8.1.0/include/deal.II  -g -O2 -D__SERIALIZATION__ -DMULTITHREAD -pthread -fPIC -std=c++11 -ftemplate-depth-256 -I~/AFEPack/library/include -I ~/SparseMatrix/SparseMatrix-main/include/
+g++ -o main  test.o -L~/AFEPack/library/lib -lAFEPack -ldeal_II -L/usr/local/dealii-8.1.0/lib  -lm -ldl  -lsparse -L ~/SparseMatrix/SparseMatrix-main/lib/
