@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
 #include <iterator>
 #include <algorithm>
 
@@ -34,7 +35,7 @@
 
 // Try to use the global variable to get the equation with diff time t;
 double t=0;
-
+double max=0.0;
 double _u_(const double * p)
 {
   return sin(PI*(p[0]+t))*sin(2*PI*p[1]);
@@ -156,7 +157,7 @@ int main(int argc, char * argv[])
 
     /// 准备线性系统的矩阵
     Matrix mat(fem_space, dt);
-    mat.algebricAccuracy() = 3;
+    mat.algebricAccuracy() = 4;
     mat.build();
 
     /// 准备右端项
@@ -165,7 +166,7 @@ int main(int argc, char * argv[])
     FEMSpace<double,DIM>::ElementIterator end_ele = fem_space.endElement();
     for (;the_ele != end_ele;++ the_ele) {
       double vol = the_ele->templateElement().volume();
-      const QuadratureInfo<DIM>& qi = the_ele->findQuadratureInfo(3);
+      const QuadratureInfo<DIM>& qi = the_ele->findQuadratureInfo(4);
       u_int n_q_pnt = qi.n_quadraturePoint();
       std::vector<double> jac = the_ele->local_to_global_jacobian(qi.quadraturePoint());
       std::vector<AFEPack::Point<DIM>> q_pnt = the_ele->local_to_global(qi.quadraturePoint());
@@ -189,10 +190,21 @@ int main(int argc, char * argv[])
     boundary_admin.apply(mat, u_h, rhs);
 
     /// 求解线性系统
-    AMGSolver solver;
-    solver.lazyReinit(mat);
-    solver.solve(u_h, rhs, 1.0e-08, 50);
-
+    AMGSolver solver(mat);
+    //solver.lazyReinit(mat);
+    solver.solve(u_h, rhs, 1.0e-08, 200);
+    double max1=0.0;
+    for (int j=0;j<u_h.size();j++)
+    {
+      if(abs(u_h[j])>max1)
+      {
+        max1=abs(u_h[j]);
+      }
+    }
+    if(abs(max1-1)>max)
+    {
+      max=abs(max1-1);
+    }
     /// 输出数据画图
    // std::stringstream result;
    // result.setf(std::ios::fixed);
@@ -205,21 +217,24 @@ int main(int argc, char * argv[])
     
     std::stringstream result;
     result.setf(std::ios::fixed);
-    result.precision(4);
+    result.precision(0);
     result << "u_h_" << int(t/dt) << ".dx";
     u_h.writeOpenDXData(result.str());
    // }
 
     //This is the original method to solve the result;
     //u_h.writeOpenDXData("u_h.dx");
-    std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
-    getchar();
+    
+    // Citing following commands to save time
+    //std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
+    //getchar();
 
     t += dt; /// 更新时间
     
     std::cout << "\n\tt = " <<  t << std::endl;
-  } while (t);
- 
+  } while (t<5);
+  
+  std::cout<<"The max error of the calculation is : "<<max<<std::endl; 
   return 0;
 }
 

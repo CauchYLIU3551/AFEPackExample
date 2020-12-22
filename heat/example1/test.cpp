@@ -44,6 +44,11 @@ double _u_(const double * p)
   //return p[0]*exp(p[1]);
 }
 
+double bound1(const double * p)
+{
+  return 1;
+}
+
 /// 右端项
 double _f_(const double * p)
 {
@@ -166,9 +171,13 @@ int main(int argc, char * argv[])
   BoundaryFunction<double,DIM> boundary(BoundaryConditionInfo::DIRICHLET,
                                         1,
                                         &_u_);
+  BoundaryFunction<double,DIM> boundary2(BoundaryConditionInfo::DIRICHLET,
+                                        2,
+                                        &bound1);
+
   BoundaryConditionAdmin<double,DIM> boundary_admin(fem_space);
   boundary_admin.add(boundary);
-
+  boundary_admin.add(boundary2);
   //double t;//
 
   do {
@@ -211,7 +220,7 @@ int main(int argc, char * argv[])
     /// 求解线性系统
     AMGSolver solver;
     solver.lazyReinit(mat);
-    solver.solve(u_h, rhs, 1.0e-08, 50);
+    solver.solve(u_h, rhs, 1.0e-08, 200);
 
     /// 输出数据画图
    // std::stringstream result;
@@ -240,7 +249,7 @@ int main(int argc, char * argv[])
     t += dt; /// 更新时间
     
     std::cout << "\n\tt = " <<  t << std::endl;
-  } while (t<5);
+  } while (t<1);
  
   return 0;
 }

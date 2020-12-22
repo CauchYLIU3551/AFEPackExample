@@ -1,5 +1,5 @@
 //
-// time: Mon Dec  7 18:10:37 2020
+// time: Tue Dec 22 15:57:14 2020
 //
 // version: 3.2.0 (format), 4.4.4 (DX)
 //
@@ -79,7 +79,7 @@ main_AutoColor_1_out_2 =
     // input[39]: defaulting = 0, visible = 0, type = 5, value = 0.5
     // input[41]: defaulting = 0, visible = 0, type = 32, value = "rotate"
     // depth: value = 24
-    // window: position = (0.4042,0.0870), size = 0.5458x0.5898
+    // window: position = (0.3990,0.0796), size = 0.5458x0.5898
     // internal caching: 1
     //
 main_Image_1_out_1,
