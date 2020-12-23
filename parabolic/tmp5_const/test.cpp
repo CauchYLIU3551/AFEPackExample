@@ -26,6 +26,8 @@
 #include <AFEPack/Operator.h>
 #include <AFEPack/Geometry.h>
 #include <AFEPack/Geometry.h>
+#include <AFEPack/Miscellaneous.h>
+#include <AFEPack/Functional.h>
 
 #define DIM 2
 #define PI (4.0*atan(1.0)) 
@@ -126,6 +128,7 @@ int main(int argc, char * argv[])
 
   /// 准备初值
   FEMFunction<double,DIM> u_h(fem_space);
+  FEMFunction<double,DIM> u_h2(fem_space);
   //Operator::L2Interpolate(&_u_, u_h);
 
   //FEMSpace<double,DIM>& fem_space = f1.femSpace();
@@ -156,11 +159,32 @@ int main(int argc, char * argv[])
   do {
     double dt = 0.01; /// 简单起见，随手取个时间步长算了
 
+    int num=t/dt+1;// The number of iterations;
+
     /// 准备线性系统的矩阵
     Matrix mat(fem_space, dt);
     mat.algebricAccuracy() = 4;
     mat.build();
 
+
+
+    /*
+    // Build the original function to help to compare;
+    for (;the_element != end_element;the_element ++) {
+    const std::vector<int>& element_dof2 = the_element->dof();
+    unsigned int n_element_dof2 = element_dof2.size();
+    for (unsigned int i = 0;i < n_element_dof2;i ++) {
+      unsigned int j = element_dof2[i];
+      const AFEPack::Point<DIM>& interp_point2 = fem_space.dofInfo(j).interp_point;
+      u_h2(j) = _u_(interp_point2);
+      }
+    }
+    std::stringstream result2;
+    result2.setf(std::ios::fixed);
+    result2.precision(0);
+    result2 << "u_original_" << int(t/dt) << ".dx";
+    u_h2.writeOpenDXData(result2.str());
+*/
     /// 准备右端项
     Vector<double> rhs(fem_space.n_dof());
     FEMSpace<double,DIM>::ElementIterator the_ele = fem_space.beginElement();
@@ -187,7 +211,23 @@ int main(int argc, char * argv[])
           rhs(ele_dof[i]) += Jxw*bas_val[i][l]*(u_h_val[l]/dt + f_val);
         }
       }
+
+      // Get the original functions;
+      const std::vector<int>& element_dof2 = the_ele ->dof();
+      unsigned int n_element_dof2 = element_dof2.size();
+      for (unsigned int i = 0;i < n_element_dof2;i ++) {
+	unsigned int j = element_dof2[i];
+	const AFEPack::Point<DIM>& interp_point2 = fem_space.dofInfo(j).interp_point;
+	u_h2(j) = _u_(interp_point2);
+      }
     }
+
+    // Save the result of the original function at time = t s;
+    std::stringstream result2;
+    result2.setf(std::ios::fixed);
+    result2.precision(0);
+    result2 << "u_original_" << t/dt << ".dx";
+    u_h2.writeOpenDXData(result2.str());
 
     /// 应用边界条件
     boundary_admin.apply(mat, u_h, rhs);
@@ -210,17 +250,24 @@ int main(int argc, char * argv[])
     {
       max=abs(max1-1);
     }
-    
+
     std::stringstream result;
     result.setf(std::ios::fixed);
     result.precision(0);
-    result << "u_h_" << int(t/dt) << ".dx";
+    result << "u_h_" << t/dt+1 << ".dx";
     u_h.writeOpenDXData(result.str());
 
     t += dt; /// 更新时间
-    
-    //std::cout << "\n\tt = " <<  t << std::endl;
-  } while (t<10);
+
+    //std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
+    //getchar();
+
+    double error = Functional::L2Error(u_h, FunctionFunction<double>(&_u_), 3);
+    std::cerr << "\nL2 error = " << error << std::endl;
+
+
+    std::cout << "\n\tt = " <<  t << std::endl;
+  } while (t<=2);
  
 // Get the max error between 1 and the top of the u_h;
 //

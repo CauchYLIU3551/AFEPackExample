@@ -1,27 +1,43 @@
 //
-// time: Wed Dec 23 17:02:17 2020
+// time: Wed Dec 23 21:23:23 2020
 //
 // version: 3.2.0 (format), 4.4.4 (DX)
 //
 //
 // MODULE main
-// workspace: width = 500, height = 537
+// workspace: width = 500, height = 519
 // layout: snap = 0, width = 50, height = 50, align = NN
 //
 macro main(
 ) -> (
 ) {
     // 
-    // node FileSelector[1]: x = 127, y = 63, inputs = 0, label = FileSelector
-    // output[1]: visible = 1, type = 32, value = "u_h.dx"
-    // output[2]: visible = 1, type = 32, value = "u_h.dx"
+    // node Sequencer[1]: x = 74, y = 9, inputs = 7, label = Sequencer
+    // input[1]: defaulting = 0, visible = 0, type = 32, value = "Sequencer_1"
+    // input[4]: defaulting = 1, visible = 1, type = 1, value = 0
+    // input[5]: defaulting = 1, visible = 1, type = 1, value = 200
+    // input[6]: defaulting = 1, visible = 0, type = 1, value = 1
+    // input[7]: defaulting = 0, visible = 0, type = 16777217, value = { 0 200 1 0 200 1 }
+    // vcr[1]: min = 0, max = 200, beg = 0, end = 200, cur = 102, inc = 1, loop = off, step = on, pal = off
+    // window: position = (0.0349,0.0250), size = 0.1667x0.0769
     //
+    main_Sequencer_1_out_1 = @frame;
     // 
-    // node Import[1]: x = 167, y = 167, inputs = 6, label = Import
+    // node Format[1]: x = 71, y = 99, inputs = 3, label = Format
+    // input[1]: defaulting = 0, visible = 1, type = 32, value = "u_h_%d.dx"
+    //
+main_Format_1_out_1 = 
+    Format(
+    main_Format_1_in_1,
+    main_Sequencer_1_out_1,
+    main_Format_1_in_3
+    ) [instance: 1, cache: 1];
+    // 
+    // node Import[1]: x = 96, y = 190, inputs = 6, label = Import
     //
 main_Import_1_out_1 = 
     Import(
-    main_FileSelector_1_out_1,
+    main_Format_1_out_1,
     main_Import_1_in_2,
     main_Import_1_in_3,
     main_Import_1_in_4,
@@ -29,7 +45,7 @@ main_Import_1_out_1 =
     main_Import_1_in_6
     ) [instance: 1, cache: 1];
     // 
-    // node RubberSheet[1]: x = 199, y = 270, inputs = 4, label = RubberSheet
+    // node RubberSheet[1]: x = 112, y = 280, inputs = 4, label = RubberSheet
     // input[2]: defaulting = 0, visible = 1, type = 5, value = 1.0
     //
 main_RubberSheet_1_out_1 = 
@@ -40,7 +56,7 @@ main_RubberSheet_1_out_1 =
     main_RubberSheet_1_in_4
     ) [instance: 1, cache: 1];
     // 
-    // node AutoColor[1]: x = 266, y = 372, inputs = 10, label = AutoColor
+    // node AutoColor[1]: x = 136, y = 370, inputs = 10, label = AutoColor
     //
 main_AutoColor_1_out_1,
 main_AutoColor_1_out_2 = 
@@ -57,16 +73,16 @@ main_AutoColor_1_out_2 =
     main_AutoColor_1_in_10
     ) [instance: 1, cache: 1];
     // 
-    // node Image[1]: x = 306, y = 475, inputs = 49, label = Image
+    // node Image[1]: x = 117, y = 460, inputs = 49, label = Image
     // input[1]: defaulting = 0, visible = 0, type = 67108863, value = "Image_1"
     // input[4]: defaulting = 0, visible = 0, type = 1, value = 1
-    // input[5]: defaulting = 0, visible = 0, type = 8, value = [0 0 -1.34706e-05]
-    // input[6]: defaulting = 0, visible = 0, type = 8, value = [-2.02267 -11.2382 0.559078]
-    // input[7]: defaulting = 0, visible = 0, type = 5, value = 6.12663
-    // input[8]: defaulting = 0, visible = 0, type = 1, value = 1034
-    // input[9]: defaulting = 0, visible = 0, type = 5, value = 0.577
-    // input[10]: defaulting = 0, visible = 0, type = 8, value = [-0.0875706 0.065213 0.994021]
-    // input[11]: defaulting = 1, visible = 0, type = 5, value = 30.0
+    // input[5]: defaulting = 0, visible = 0, type = 8, value = [0.5 0.5 0.00295809]
+    // input[6]: defaulting = 0, visible = 0, type = 8, value = [0.5 -5.57845 0.00295809]
+    // input[7]: defaulting = 0, visible = 0, type = 5, value = 3.25745
+    // input[8]: defaulting = 0, visible = 0, type = 1, value = 960
+    // input[9]: defaulting = 0, visible = 0, type = 5, value = 0.752
+    // input[10]: defaulting = 0, visible = 0, type = 8, value = [0 6.12323e-17 1]
+    // input[11]: defaulting = 1, visible = 0, type = 5, value = 30.0002
     // input[12]: defaulting = 0, visible = 0, type = 1, value = 0
     // input[14]: defaulting = 0, visible = 0, type = 1, value = 1
     // input[15]: defaulting = 1, visible = 0, type = 32, value = "none"
@@ -75,11 +91,9 @@ main_AutoColor_1_out_2 =
     // input[18]: defaulting = 1, visible = 0, type = 1, value = 1
     // input[19]: defaulting = 0, visible = 0, type = 1, value = 0
     // input[29]: defaulting = 0, visible = 0, type = 3, value = 1
-    // input[33]: defaulting = 0, visible = 0, type = 3, value = 1
-    // input[39]: defaulting = 0, visible = 0, type = 5, value = 0.5
     // input[41]: defaulting = 0, visible = 0, type = 32, value = "rotate"
     // depth: value = 24
-    // window: position = (0.3990,0.0796), size = 0.5458x0.5898
+    // window: position = (0.0854,0.0593), size = 0.5073x0.7056
     // internal caching: 1
     //
 main_Image_1_out_1,
@@ -139,7 +153,22 @@ main_Image_1_out_3 =
 // network: end of macro body
 CacheScene(main_Image_1_in_1, main_Image_1_out_1, main_Image_1_out_2);
 }
-main_FileSelector_1_out_1 = "u_h.dx";
+main_Sequencer_1_in_1 = "Sequencer_1";
+main_Sequencer_1_in_2 = NULL;
+main_Sequencer_1_in_3 = NULL;
+main_Sequencer_1_in_4 = NULL;
+main_Sequencer_1_in_5 = NULL;
+main_Sequencer_1_in_6 = NULL;
+main_Sequencer_1_in_7 = { 0 200 1 0 200 1 };
+main_Sequencer_1_out_1 = NULL;
+
+@startframe = 0;
+@nextframe  = @startframe;
+@endframe   = 200;
+@deltaframe = 1;
+main_Format_1_in_1 = "u_h_%d.dx";
+main_Format_1_in_3 = NULL;
+main_Format_1_out_1 = NULL;
 main_Import_1_in_2 = NULL;
 main_Import_1_in_3 = NULL;
 main_Import_1_in_4 = NULL;
@@ -475,12 +504,12 @@ macro Image(
 main_Image_1_in_1 = "Image_1";
 main_Image_1_in_3 = "X24,,";
 main_Image_1_in_4 = 1;
-main_Image_1_in_5 = [0 0 -1.34706e-05];
-main_Image_1_in_6 = [-2.02267 -11.2382 0.559078];
-main_Image_1_in_7 = 6.12663;
-main_Image_1_in_8 = 1034;
-main_Image_1_in_9 = 0.577;
-main_Image_1_in_10 = [-0.0875706 0.065213 0.994021];
+main_Image_1_in_5 = [0.5 0.5 0.00295809];
+main_Image_1_in_6 = [0.5 -5.57845 0.00295809];
+main_Image_1_in_7 = 3.25745;
+main_Image_1_in_8 = 960;
+main_Image_1_in_9 = 0.752;
+main_Image_1_in_10 = [0 6.12323e-17 1];
 main_Image_1_in_11 = NULL;
 main_Image_1_in_12 = 0;
 main_Image_1_in_13 = NULL;
@@ -502,13 +531,13 @@ main_Image_1_in_29 = 1;
 main_Image_1_in_30 = NULL;
 main_Image_1_in_31 = NULL;
 main_Image_1_in_32 = NULL;
-main_Image_1_in_33 = 1;
+main_Image_1_in_33 = NULL;
 main_Image_1_in_34 = NULL;
 main_Image_1_in_35 = NULL;
 main_Image_1_in_36 = NULL;
 main_Image_1_in_37 = NULL;
 main_Image_1_in_38 = NULL;
-main_Image_1_in_39 = 0.5;
+main_Image_1_in_39 = NULL;
 main_Image_1_in_40 = NULL;
 main_Image_1_in_41 = "rotate";
 main_Image_1_in_42 = NULL;
@@ -521,4 +550,6 @@ main_Image_1_in_48 = NULL;
 main_Image_1_in_49 = NULL;
 Executive("product version 4 4 4");
 $sync
-main();
+
+sequence main();
+play;
