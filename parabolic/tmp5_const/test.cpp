@@ -48,7 +48,7 @@ double _u_(const double * p)
 /// 右端项
 double _f_(const double * p)
 {
-  return 5*PI*PI*_u_(p)+PI*cos(PI*(p[0]))*sin(2*PI*p[1]);
+  return 5*PI*PI*_u_(p)+PI*cos(PI*(p[0]+t))*sin(2*PI*p[1]);
   //return 10+5*PI*PI*_u_(p);
   //return p[0]*p[1] + sin(p[1]);
 }
@@ -156,11 +156,12 @@ int main(int argc, char * argv[])
 
   //double t;//
 
+  int num=0;
   do {
     double dt = 0.01; /// 简单起见，随手取个时间步长算了
 
-    int num=t/dt+1;// The number of iterations;
-
+    int num = t/dt;
+    
     /// 准备线性系统的矩阵
     Matrix mat(fem_space, dt);
     mat.algebricAccuracy() = 4;
@@ -223,11 +224,11 @@ int main(int argc, char * argv[])
     }
 
     // Save the result of the original function at time = t s;
-    std::stringstream result2;
-    result2.setf(std::ios::fixed);
-    result2.precision(0);
-    result2 << "u_original_" << t/dt << ".dx";
-    u_h2.writeOpenDXData(result2.str());
+ //   std::stringstream result2;
+  //  result2.setf(std::ios::fixed);
+   // result2.precision(0);
+ //   result2 << "u_original_" << t/dt << ".dx";
+   // u_h2.writeOpenDXData(result2.str());
 
     /// 应用边界条件
     boundary_admin.apply(mat, u_h, rhs);
@@ -254,7 +255,7 @@ int main(int argc, char * argv[])
     std::stringstream result;
     result.setf(std::ios::fixed);
     result.precision(0);
-    result << "u_h_" << t/dt+1 << ".dx";
+    result << "u_h_" << t/dt << ".dx";
     u_h.writeOpenDXData(result.str());
 
     t += dt; /// 更新时间
