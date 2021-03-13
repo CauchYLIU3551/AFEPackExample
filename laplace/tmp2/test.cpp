@@ -1,0 +1,18 @@
+#include<iostream>
+#include<./test.h>
+
+void fun1(int *& p, int a)
+{
+  p=new int(a);
+}
+
+int main()
+{
+  int* p;
+  int a=10;
+  fun1(p,a);
+  std::cout<<*p<<"\n";
+  std::cout<<p<<"\n";
+  std::cout<<a<<"\n";
+  return 0;
+}

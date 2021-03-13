@@ -44,13 +44,13 @@ double _f_(const double * p)
 }
 
 
-/// 1/dt - \Delta 离散出来的矩阵
-class Matrix : public L2InnerProduct<DIM,double>
+/// The stiff matrix in the left hand side of the eigenvalue problem;
+class Stiff_Matrix : public L2InnerProduct<DIM,double>
 {
 private:
   double _dt;
 public:
-  Matrix(FEMSpace<double,DIM>& sp, double dt) :
+  Stiff_Matrix(FEMSpace<double,DIM>& sp, double dt) :
     L2InnerProduct<DIM,double>(sp, sp), _dt(dt) {}
   virtual void getElementMatrix(const Element<double,DIM>& e0,
                                 const Element<double,DIM>& e1,
@@ -78,6 +78,48 @@ public:
       for (u_int i = 0;i < n_ele_dof;++ i) {
         for (u_int j = 0;j < n_ele_dof;++ j) {
 	  elementMatrix(i,j) += Jxw*(innerProduct(bas_grad[i][l], bas_grad[j][l]));
+	  //          elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]/_dt +
+          //                           innerProduct(bas_grad[i][l], bas_grad[j][l]));
+        }
+      }
+    }
+  }
+};
+
+/// The mass matrix in the right hand side of the eigenvalue problem;
+class Mass_Matrix : public L2InnerProduct<DIM,double>
+{
+private:
+  double _dt;
+public:
+  Mass_Matrix(FEMSpace<double,DIM>& sp, double dt) :
+    L2InnerProduct<DIM,double>(sp, sp), _dt(dt) {}
+  virtual void getElementMatrix(const Element<double,DIM>& e0,
+                                const Element<double,DIM>& e1,
+                                const ActiveElementPairIterator< DIM >::State s)
+  {
+    double vol = e0.templateElement().volume();
+    u_int acc = algebricAccuracy();
+    const QuadratureInfo<DIM>& qi = e0.findQuadratureInfo(acc);
+    u_int n_q_pnt = qi.n_quadraturePoint();
+    std::vector<double> jac = e0.local_to_global_jacobian(qi.quadraturePoint());
+    //AFEPack::Point<DIM> test1;
+    //std::vector<AFEPack::Point<DIM>> test2;
+    // 
+    // Here always get an error! vector<Point<DIM> >;
+    // Reason: Because there is a same name class in deal.ii: Point class. While
+    // using Point, it might use the dealii.Point defaultly!!!! So you just add 
+    // the namespace to control the class will solve the problem;
+    std::vector<AFEPack::Point<DIM>> q_pnt = e0.local_to_global(qi.quadraturePoint());
+    //std::cout<<"ATTENTION!This is a test flag!!!"<<std::endl;
+    std::vector<std::vector<double> > bas_val = e0.basis_function_value(q_pnt);
+    std::vector<std::vector<std::vector<double> > > bas_grad = e0.basis_function_gradient(q_pnt);
+    u_int n_ele_dof = e0.dof().size();
+    for (u_int l = 0;l < n_q_pnt;++ l) {
+      double Jxw = vol*qi.weight(l)*jac[l];
+      for (u_int i = 0;i < n_ele_dof;++ i) {
+        for (u_int j = 0;j < n_ele_dof;++ j) {
+	  elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]);
 	  //          elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]/_dt +
           //                           innerProduct(bas_grad[i][l], bas_grad[j][l]));
         }
@@ -119,7 +161,7 @@ int main(int argc, char * argv[])
   /// 准备初值
   FEMFunction<double,DIM> u_h(fem_space);
   Operator::L2Interpolate(&_u_, u_h);
-
+ 
   /// 准备边界条件
   BoundaryFunction<double,DIM> boundary(BoundaryConditionInfo::DIRICHLET,
                                         1,
@@ -127,15 +169,27 @@ int main(int argc, char * argv[])
   BoundaryConditionAdmin<double,DIM> boundary_admin(fem_space);
   boundary_admin.add(boundary);
 
-  double t;//
+  double t=0;//
 
   do {
     double dt = 0.01; /// 简单起见，随手取个时间步长算了
 
     /// 准备线性系统的矩阵
-    Matrix mat(fem_space, dt);
+    Stiff_Matrix mat(fem_space, dt);
     mat.algebricAccuracy() = 3;
     mat.build();
+
+    // std::cout<<"Output the flag2!\n";
+
+    /// construct the mass matrix
+    Mass_Matrix mass_matrix(fem_space, dt);
+    mass_matrix.algebricAccuracy()=3;
+    mass_matrix.build();
+
+    //std::cout<<"Output the flag2!\n";
+
+    /*
+
 
     /// 准备右端项
     Vector<double> rhs(fem_space.n_dof());
@@ -178,10 +232,12 @@ int main(int argc, char * argv[])
     std::cout << "Press ENTER to continue or CTRL+C to stop ..." << std::flush;
     getchar();
 
+    */
+
     t += dt; /// 更新时间
     
     std::cout << "\n\tt = " <<  t << std::endl;
-  } while (t<0.2);
+  } while (t<0.1);
  
   return 0;
 }
