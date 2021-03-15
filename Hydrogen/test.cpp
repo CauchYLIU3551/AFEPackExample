@@ -8,6 +8,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <iterator>
 #include <algorithm>
@@ -91,8 +92,10 @@ public:
         for (u_int j = 0;j < n_ele_dof;++ j) {
           //elementMatrix(i,j) += Jxw*(bas_val[i][l]*bas_val[j][l]/_dt +
 	  //                         innerProduct(bas_grad[i][l], bas_grad[j][l]));
-	  elementMatrix(i,j) += Jxw*(innerProduct(bas_grad[i][l], bas_grad[j][l]) +
-				     r_val * bas_val[i][l] * bas_val[j][l]);
+	  // In fact, during the compute process, the matrix A contain some eigenvalues which are negative. To avoid this situation, while building matrix A, I add constant k times matrix M into A.
+	  elementMatrix(i,j) += Jxw*(0.5*innerProduct(bas_grad[i][l], bas_grad[j][l]) -
+				     r_val * bas_val[i][l] * bas_val[j][l]  +
+				     10*bas_val[i][l] * bas_val[j][l]);
         }
       }
     }
@@ -195,7 +198,7 @@ int main(int argc, char * argv[])
   fem_space.buildDof();
   fem_space.buildDofBoundaryMark();
 
-   std::cout<<"Test flag!!!\n";
+  //   std::cout<<"Test flag!!!\n";
   
   /// 准备初值
   FEMFunction<double,DIM> u_h(fem_space);
@@ -362,15 +365,16 @@ int main(int argc, char * argv[])
     
   //std::cout << "\n\tt = " <<  t << std::endl;
 
-  // std::ofstream sparsematrix2 ("stiff_matrix.1");
+  //std::ofstream sparsematrix2 ("stiff_matrix.1");
   //stiff_matrix.print(sparsematrix2);
-  // std::ofstream sparsematrix  ("mass_matrix.1");
-  // mass_matrix.print(sparsematrix);
+  //std::ofstream sparsematrix  ("mass_matrix.1");
+  //mass_matrix.print(sparsematrix);
 
-  /*
+  
   std::cout<<"Attention! This is print out the columns of the matrix A and M\n";
   std::vector<double> tempx(stiff_matrix.n(),0), tempAx, tempMx;
-
+  std::ofstream ocout;
+  ocout.open("stiffmatrix.txt");
   for(int i=0;i<solver.A->m();i++)
     {
       tempx[i]=1;
@@ -378,19 +382,25 @@ int main(int argc, char * argv[])
       tempAx=multiply(solver.A, tempx);
       for(int j=0;j<tempAx.size();j++)
 	{
-	  std::cout<<tempAx[j]<<" ";
+	  ocout<<tempAx[j]<<" ";
 	}
-	std::cout<<std::endl;
-      
+      tempx[i]=0;
+      }
+  ocout.close();
+
+  std::ofstream ocout2;
+  ocout2.open("massmatrix.txt");
+  for(int i=0;i<solver.A->m();i++)
+    {
+      tempx[i]=1;
       tempMx=multiply(solver.M, tempx);
       for(int j=0;j<tempMx.size();j++)
 	{
-	  std::cout<<tempMx[j]<<" ";
+	  ocout2<<tempMx[j]<<" ";
 	}
-      std::cout<<std::endl;
       tempx[i]=0;
-    }*/
-  
+      }
+  ocout2.close();
   return 0;
 }
 
