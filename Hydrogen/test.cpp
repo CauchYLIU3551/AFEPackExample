@@ -30,8 +30,13 @@
 #include <trace/mintrace.h>
 #include <trace/Miscellaneous.h>
 
+#include <time.h>
+
+
 #define DIM 3 
-#define PI (4.0*atan(1.0)) 
+#define PI (4.0*atan(1.0))
+
+clock_t start, end;
 
 /// 初值和边值的表达式
 double _u_(const double * p)
@@ -53,7 +58,7 @@ double _r_(const double * p)
 {
   // if (DIM==3)
   // {
-      return 1.0/(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
+      return 1.0/sqrt(p[0]*p[0]+p[1]*p[1]+p[2]*p[2]);
       // }
 }
 
@@ -95,7 +100,7 @@ public:
 	  // In fact, during the compute process, the matrix A contain some eigenvalues which are negative. To avoid this situation, while building matrix A, I add constant k times matrix M into A.
 	  elementMatrix(i,j) += Jxw*(0.5*innerProduct(bas_grad[i][l], bas_grad[j][l]) -
 				     r_val * bas_val[i][l] * bas_val[j][l]  +
-				     10*bas_val[i][l] * bas_val[j][l]);
+				     bas_val[i][l] * bas_val[j][l]);
         }
       }
     }
@@ -311,14 +316,19 @@ int main(int argc, char * argv[])
   */
   
   /////////////////////////////
+  start=clock();
   
-  solver.mintrace(2, 1.0e-5, 2000);
+  solver.mintrace(6, 1.0e-5, 2000);
 
+  end=clock();
+  double endtime=(double)(end-start)/CLOCKS_PER_SEC;
+
+  std::cout<<"The computing time of MinTrace solver is :::"<<1000*endtime<<" ms \n";
   
   std::cout<<"This is the eigenvalues of AX=lambda Mx;\n";
   for (int i=0;i<solver.lambda.size();i++)
     {
-      std::cout<<solver.lambda[i]<<std::endl;
+      std::cout<<solver.lambda[i]-1<<std::endl;
     }
   std::cout<<"\n";
 
@@ -370,7 +380,7 @@ int main(int argc, char * argv[])
   //std::ofstream sparsematrix  ("mass_matrix.1");
   //mass_matrix.print(sparsematrix);
 
-  
+   
   std::cout<<"Attention! This is print out the columns of the matrix A and M\n";
   std::vector<double> tempx(stiff_matrix.n(),0), tempAx, tempMx;
   std::ofstream ocout;
@@ -401,6 +411,8 @@ int main(int argc, char * argv[])
       tempx[i]=0;
       }
   ocout2.close();
+   
+
   return 0;
 }
 
